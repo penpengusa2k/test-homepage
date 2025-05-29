@@ -6,12 +6,16 @@ import Faq from '@/views/Faq.vue'
 import Contact from '@/views/Contact.vue'
 import Access from '@/views/Access.vue'
 import NotificationDetail from '../views/NotificationDetail.vue'  
+import DogList from '@/views/DogList.vue'
+import DogDetail from '@/views/DogDetail.vue'
 
 const routes = [
   { path: '/', name: 'Home', component: Home },
   { path: '/about', name: 'About', component: About },
   { path: '/notifications', name: 'Notifications', component: Notifications },
   { path: '/notifications/:id', name: 'NotificationDetail', component: NotificationDetail },
+  { path: '/doglist', name: 'DogList', component: DogList },
+  { path: '/dogs/:id', name: 'DogDetail', component: DogDetail},
   { path: '/faq', name: 'Faq', component: Faq },
   { path: '/contact', name: 'Contact', component: Contact },
   { path: '/access', name: 'Access', component: Access },

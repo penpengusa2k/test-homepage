@@ -25,6 +25,10 @@
           <span class="material-icons text-base">info</span>
           <span>里親カフェとは</span>
         </router-link>
+        <router-link to="/dogList" class="flex items-center space-x-1 hover:text-yellow-600">
+          <span class="material-icons text-base">pets</span>
+          <span>保護犬情報</span>
+        </router-link>
         <router-link to="/notifications" class="flex items-center space-x-1 hover:text-yellow-600">
           <span class="material-icons text-base">notifications</span>
           <span>お知らせ</span>
