@@ -1,6 +1,6 @@
-const e=`## あああ
+const n=`## あああ
 6月より営業を再開いたします。皆様のご来店をお待ちしております。
 
 ### ee
 
-uuu`;export{e as default};
+uuu`;export{n as default};
