@@ -1,7 +1,6 @@
 <template>
   <main class="w-full px-4 mt-8">
     <HeroSection />
-
     <section class="py-16 bg-gray-100">
       <div class="max-w-7xl mx-auto px-4 text-center">
         <h2 class="text-3xl font-bold text-gray-800 mb-4">里親カフェとは？</h2>
@@ -10,7 +9,6 @@
         </p>
       </div>
     </section>
-
     <section class="py-16">
       <div class="max-w-7xl mx-auto px-4">
         <h2 class="text-2xl font-bold text-gray-800 mb-2">最新のお知らせ</h2>
@@ -40,15 +38,14 @@
         </div>
       </div>
     </section>
-
-    <section class="py-16 bg-green-50">
-      <div class="max-w-7xl mx-auto px-4 text-center">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">イベントのご案内</h2>
-        <p class="text-gray-600 mb-6">
-          毎月さまざまなイベントを開催中！お気軽にご参加ください。
-        </p>
-        <router-link to="/notifications" class="inline-block bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700">
-          イベント情報を見る
+    <section>
+      <div class="w-full text-center"> 
+        <router-link
+          to="/dogList"
+          class="inline-flex items-center justify-center bg-orange-400 text-white py-6 rounded-lg hover:bg-orange-500 transition duration-300 ease-in-out text-xl font-semibold w-full block px-4"
+        >
+          <span class="material-icons text-2xl mr-2">search</span>
+          保護犬を探す
         </router-link>
       </div>
     </section>

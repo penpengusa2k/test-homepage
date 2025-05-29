@@ -64,6 +64,10 @@
           <span class="material-icons text-base">notifications</span>
           <span>お知らせ</span>
         </router-link>
+        <router-link to="/dogList" @click="closeMenu" class="flex items-center space-x-1 hover:text-yellow-600">
+          <span class="material-icons text-base">pets</span>
+          <span>保護犬情報</span>
+        </router-link>
         <router-link to="/faq" @click="closeMenu" class="flex items-center space-x-1 hover:text-yellow-600">
           <span class="material-icons text-base">help_outline</span>
           <span>よくある質問</span>
