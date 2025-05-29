@@ -1,5 +1,5 @@
 <template>
-  <main class="w-full px-4 pt-20">
+  <main class="w-full px-4 mt-8">
     <HeroSection />
 
     <section class="py-16 bg-gray-100">
@@ -13,44 +13,30 @@
 
     <section class="py-16">
       <div class="max-w-7xl mx-auto px-4">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-          お知らせ
-        </h2>
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">最新のお知らせ</h2>
 
-        <div class="flex items-center gap-6">
-          <!-- お知らせカード -->
-          <div class="grid grid-cols-3 gap-6 flex-1">
-            <div
-              v-for="notice in displayedNotices"
-              :key="notice.filename"
-              class="notice-card p-4 border rounded cursor-pointer hover:shadow"
-              @click="goDetail(notice.filename)"
-            >
-              <small class="text-gray-500">{{ notice.date }}</small>
-              <h3 class="text-lg font-semibold mt-1">{{ notice.title }}</h3>
-              <p class="text-gray-700 mt-2">{{ notice.summary }}</p>
+        <div class="notifications-list"> 
+          <div
+            v-for="(notice, index) in displayedNotices"
+            :key="notice.filename"
+            class="notice-item py-4 cursor-pointer hover:bg-gray-50"
+            :class="{ 'border-b border-gray-200': index < displayedNotices.length - 1 }"
+            @click="goDetail(notice.filename)"
+          >
+            <div class="flex items-baseline gap-4"> <small class="text-gray-500">{{ notice.date }}</small>
+              <h3 class="text-lg font-semibold mt-1 leading-tight">{{ notice.title }}</h3> </div>
             </div>
+
+          <div v-if="notices.length > 3" class="flex justify-center mt-2">
+            <button
+              @click="goNotifications"
+              aria-label="お知らせ一覧へ"
+              class="hover:text-gray-500 text-lg font-medium transition"
+            >
+              more &gt;
+            </button>
           </div>
 
-          <!-- 矢印ボタン（3件以上のときだけ表示） -->
-          <button
-            v-if="notices.length > 3"
-            @click="goNotifications"
-            aria-label="お知らせ一覧へ"
-            class="p-3 text-gray-500 hover:text-gray-800 rounded border border-gray-300 hover:border-gray-600 transition"
-            style="align-self: center;"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-8 w-8"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
         </div>
       </div>
     </section>

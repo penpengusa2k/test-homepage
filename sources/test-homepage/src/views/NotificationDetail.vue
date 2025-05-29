@@ -1,3 +1,12 @@
+<template>
+  <div class="notification-detail max-w-4xl mx-auto p-8 bg-white shadow-md rounded-lg">
+    <small v-if="date" class="text-gray-500 text-sm">{{ date }}</small>
+    <h1 class="text-3xl font-bold mt-1 mb-6 text-gray-800">{{ title }}</h1>
+    
+    <div class="markdown-content" v-html="contentHtml"></div>
+  </div>
+</template>
+
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
@@ -74,8 +83,6 @@ async function loadDetail() {
     const rawContent = await notices[matchedKey]()
     // マークダウンをHTMLに変換
     contentHtml.value = md.render(rawContent)
-    console.log("Rendered HTML:", contentHtml.value) // デバッグ用
-
     // ファイル名から日付とタイトルを取得
     const filename = matchedKey.split('/').pop() // パスからファイル名のみ取得
     const parsed = parseFilename(filename)
@@ -92,15 +99,6 @@ async function loadDetail() {
 // コンポーネントがマウントされた時に詳細を読み込む
 onMounted(loadDetail)
 </script>
-
-<template>
-  <div class="notification-detail max-w-3xl mx-auto p-8 bg-white shadow-md rounded-lg">
-    <small v-if="date" class="text-gray-500 text-sm">{{ date }}</small>
-    <h1 class="text-3xl font-bold mt-1 mb-6 text-gray-800">{{ title }}</h1>
-    
-    <div class="markdown-content" v-html="contentHtml"></div>
-  </div>
-</template>
 
 <style>
 /* このスタイルブロックは "scoped" 属性を持たないため、グローバルに適用されます。

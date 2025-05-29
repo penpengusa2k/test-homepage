@@ -4,8 +4,6 @@ const modules = import.meta.glob('../notices/*.md', {
   eager: true
 })
 
-const base = import.meta.env.BASE_URL.replace(/\/$/, '') // 末尾のスラッシュ除去
-
 const notices = Object.entries(modules).map(([path, raw]) => {
   // ファイル名処理
   const fileName = path.split('/').pop() || ''
@@ -14,15 +12,6 @@ const notices = Object.entries(modules).map(([path, raw]) => {
   const date = fileMatch?.[1] || ''
   const title = decodeURIComponent(fileMatch?.[2]?.replace(/-/g, ' ')) || ''
   const slug = fileName.replace(/\.md$/, '')
-
-  // 画像パス補正
-  const content = raw.replace(
-    /(<img\s+[^>]*src=["'])(\/notices\/images\/[^"']+)(["'][^>]*>)/g,
-    `$1${base}$2$3`
-  ).replace(
-    /(!\[.*?\]\()\/notices\/images\/(.*?\))/g,
-    `$1${base}/notices/images/$2`
-  )
 
   return {
     date,
