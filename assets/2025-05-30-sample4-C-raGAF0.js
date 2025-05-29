@@ -4,5 +4,5 @@ sampleです
 ### ee
 
 hogehogehoge
-![kusoinu](/notices/images/kusoinu.png)
+![kusoinu](/test-homepage/notices/images/kusoinu.png)
 `;export{e as default};
