@@ -1,7 +1,13 @@
 <template>
     <div class="p-6">
-      <h1 class="text-2xl font-bold mb-4">お問い合わせ</h1>
-      <p class="text-gray-700">ご質問・ご意見などはこちらからどうぞ。</p>
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeYkJN5ZEX1PCTYLeoXl_EtmELiss8qopnAx0wzmh5-EL2ypw/viewform?embedded=true"
+        width="100%"
+        height="586"
+        frameborder="0"
+        marginheight="0"
+        marginwidth="0">
+        読み込んでいます…
+      </iframe>
     </div>
   </template>
   
