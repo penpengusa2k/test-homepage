@@ -21,10 +21,7 @@ a,
 }
 
 @media (min-width: 1024px) {
-  /* bodyの中央寄せを削除 */
-  /* #app のgridも削除 */
   #app {
-    padding: 0 2rem;
     max-width: 1280px;
     margin: 0 auto;
   }
