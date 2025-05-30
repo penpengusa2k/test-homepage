@@ -29,7 +29,7 @@
             <button
               @click="goNotifications"
               aria-label="お知らせ一覧へ"
-              class="hover:text-gray-500 text-lg font-medium transition"
+              class="hover:text-gray-500 text-xl font-medium transition"
             >
               more &gt;
             </button>
