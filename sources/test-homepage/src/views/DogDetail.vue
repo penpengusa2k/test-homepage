@@ -22,18 +22,20 @@
           pagination
           class="w-full h-80 sm:h-96 rounded-2xl overflow-hidden shadow-lg border border-peach-200"
         >
-          <SwiperSlide
-            v-for="(image, index) in dog.images"
-            :key="index"
-            @click="openModal(index)"
-            class="cursor-zoom-in bg-peach-100 flex items-center justify-center"
-          >
-            <img
-              :src="image.url"
-              :alt="`${dog.name}の画像 ${index + 1}`"
-              class="w-full h-full object-cover"
-            />
-          </SwiperSlide>
+<SwiperSlide
+  v-for="(image, index) in dog.images"
+  :key="index"
+  class="cursor-zoom-in bg-peach-100 flex items-center justify-center pswp-gallery"
+>
+  <a :href="image.url" :data-pswp-width="1600" :data-pswp-height="1200" target="_blank" rel="noreferrer">
+    <img
+      :src="image.url"
+      :alt="`${dog.name}の画像 ${index + 1}`"
+      class="w-full h-full object-cover"
+    />
+  </a>
+</SwiperSlide>
+
         </Swiper>
 
         <!-- PhotoSwipeのモーダルはJSで生成するのでテンプレート不要 -->
@@ -113,7 +115,7 @@ onMounted(async () => {
   // PhotoSwipeの初期化
   lightbox.value = new PhotoSwipeLightbox({
     gallery: '.swiper', // Swiperの親クラスを指定
-    children: 'img', // 子要素（画像）を指定
+    children: 'a', // 子要素（画像）を指定
     pswpModule: () => import('photoswipe'),
   });
   lightbox.value.init();
