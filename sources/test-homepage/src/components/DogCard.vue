@@ -1,49 +1,59 @@
 <template>
   <div
-    class="bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition duration-300 relative"
+    class="bg-white rounded-3xl shadow-xl overflow-hidden cursor-pointer hover:shadow-2xl transition duration-300 relative transform hover:-translate-y-1"
     @click="$emit('click')"
-    :class="{ 'opacity-50 pointer-events-none': dog.status === '譲渡済' }"
+    :class="{ 'opacity-60 pointer-events-none': dog.status === '譲渡済' }"
   >
-    <!-- 犬の画像ラッパー -->
-    <div class="relative">
+    <div class="relative w-full h-52 overflow-hidden">
       <img
         :src="dog.images?.[0]?.url"
         alt="犬の写真"
-        class="w-full h-52 object-cover bg-gray-100"
+        class="w-full h-full object-cover bg-peach-50"
       />
 
-      <!-- 譲渡済みラベル -->
       <div
         v-if="dog.status === '譲渡済'"
-        class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 text-white text-lg font-bold"
+        class="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-60 text-white text-2xl font-extrabold tracking-wide"
       >
-        譲渡済みです
+        <span class="material-icons text-4xl mr-2">pets</span>
+        譲渡済み
       </div>
     </div>
 
-    <!-- 名前と性別 -->
-    <div class="px-4 py-3 text-center">
-      <div class="flex justify-center items-center gap-2 mb-1">
-        <h2 class="text-xl font-bold text-gray-800">{{ dog.name }}</h2>
+    <div class="p-4 sm:p-5 text-center">
+      <div class="flex flex-col sm:flex-row justify-center items-center gap-2 mb-2">
+        <h2 class="text-2xl font-bold text-orange-700 leading-tight">{{ dog.name }}</h2>
         <span
           v-if="dog.gender === '男の子'"
-          class="text-xs bg-blue-100 text-blue-700 font-semibold px-2 py-0.5 rounded-full"
+          class="text-xs bg-blue-100 text-blue-700 font-semibold px-2.5 py-1 rounded-full whitespace-nowrap flex items-center gap-1"
         >
-          ♂ 男の子
+          <span class="material-icons text-base">male</span>
+          男の子
         </span>
         <span
           v-else-if="dog.gender === '女の子'"
-          class="text-xs bg-pink-100 text-pink-700 font-semibold px-2 py-0.5 rounded-full"
+          class="text-xs bg-pink-100 text-pink-700 font-semibold px-2.5 py-1 rounded-full whitespace-nowrap flex items-center gap-1"
         >
-          ♀ 女の子
+          <span class="material-icons text-base">female</span>
+          女の子
         </span>
       </div>
 
-      <!-- 犬種 -->
-      <div class="flex justify-center gap-6 text-sm text-gray-600 mt-2">
-        <div class="flex flex-col items-center">
-          {{ dog.breed }}
+      <div class="text-sm text-gray-600 mb-3">
+        <p class="font-medium">{{ dog.breed }}</p>
         </div>
+
+      <div class="mt-auto flex justify-center">
+        <span
+          class="status-badge px-3 py-1 rounded-full text-sm font-semibold"
+          :class="{
+            'bg-green-100 text-green-700': dog.status === '募集中',
+            'bg-blue-100 text-blue-700': dog.status === 'トライアル中',
+            'bg-gray-200 text-gray-600': dog.status === '譲渡済'
+          }"
+        >
+          {{ dog.status }}
+        </span>
       </div>
     </div>
   </div>
@@ -54,3 +64,11 @@ const props = defineProps({
   dog: Object
 });
 </script>
+
+<style scoped>
+/* 必要であれば追加のスタイルをここに記述 */
+/* たとえば、status-badgeの細かな調整など */
+.status-badge {
+  white-space: nowrap; /* テキストの折り返しを防ぐ */
+}
+</style>

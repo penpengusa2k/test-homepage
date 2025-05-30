@@ -1,14 +1,18 @@
 <template>
-  <div class="p-6">
-    <h1 class="text-2xl font-bold mb-4">保護犬一覧</h1>
+  <div class="p-6 bg-peach-50 min-h-screen">
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-orange-700 text-center mb-8">
+      新しい家族を待つわんちゃんたち
+    </h1>
 
-    <div class="mb-6 bg-gray-50 p-4 rounded-lg shadow-sm">
-      <div class="mb-4">
-        <label for="breed-select" class="block text-gray-700 text-sm font-bold mb-2">犬種で絞り込む:</label>
+    <div class="mb-10 bg-peach-100 p-6 rounded-2xl shadow-lg border border-peach-200">
+      <div class="mb-6">
+        <label for="breed-select" class="block text-orange-700 text-lg font-bold mb-3">
+          犬種で絞り込む:
+        </label>
         <select
           id="breed-select"
           v-model="selectedBreed"
-          class="block w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="block w-full p-3 border border-orange-200 rounded-xl shadow-sm focus:outline-none focus:ring-3 focus:ring-orange-400 text-gray-700 transition duration-200 ease-in-out"
         >
           <option value="">すべての犬種</option>
           <option v-for="breed in availableBreeds" :key="breed" :value="breed">
@@ -18,49 +22,51 @@
       </div>
 
       <div>
-        <label class="block text-gray-700 text-sm font-bold mb-2">ステータスで絞り込む:</label>
-        <div class="flex flex-wrap gap-x-4 gap-y-2">
-          <label class="inline-flex items-center">
+        <label class="block text-orange-700 text-lg font-bold mb-3">
+          ステータスで絞り込む:
+        </label>
+        <div class="flex flex-wrap gap-x-6 gap-y-3">
+          <label class="inline-flex items-center cursor-pointer">
             <input
               type="radio"
               v-model="selectedStatus"
               value=""
-              class="form-radio h-4 w-4 text-blue-600"
+              class="form-radio h-5 w-5 text-orange-600 border-orange-300 focus:ring-orange-400 transition duration-150 ease-in-out"
             />
-            <span class="ml-2 text-gray-700">すべて</span>
+            <span class="ml-2 text-gray-700 text-base">すべて</span>
           </label>
-          <label class="inline-flex items-center">
+          <label class="inline-flex items-center cursor-pointer">
             <input
               type="radio"
               v-model="selectedStatus"
               value="募集中"
-              class="form-radio h-4 w-4 text-blue-600"
+              class="form-radio h-5 w-5 text-orange-600 border-orange-300 focus:ring-orange-400 transition duration-150 ease-in-out"
             />
-            <span class="ml-2 text-gray-700">募集中</span>
+            <span class="ml-2 text-gray-700 text-base">募集中</span>
           </label>
-          <label class="inline-flex items-center">
+          <label class="inline-flex items-center cursor-pointer">
             <input
               type="radio"
               v-model="selectedStatus"
               value="トライアル中"
-              class="form-radio h-4 w-4 text-blue-600"
+              class="form-radio h-5 w-5 text-orange-600 border-orange-300 focus:ring-orange-400 transition duration-150 ease-in-out"
             />
-            <span class="ml-2 text-gray-700">トライアル中</span>
+            <span class="ml-2 text-gray-700 text-base">トライアル中</span>
           </label>
-          <label class="inline-flex items-center">
+          <label class="inline-flex items-center cursor-pointer">
             <input
               type="radio"
               v-model="selectedStatus"
               value="譲渡済"
-              class="form-radio h-4 w-4 text-blue-600"
+              class="form-radio h-5 w-5 text-orange-600 border-orange-300 focus:ring-orange-400 transition duration-150 ease-in-out"
             />
-            <span class="ml-2 text-gray-700">譲渡済</span>
+            <span class="ml-2 text-gray-700 text-base">譲渡済</span>
           </label>
         </div>
       </div>
     </div>
 
-    <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <div class="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       <DogCard
         v-for="dog in filteredAndSortedDogs"
         :key="dog.id"
@@ -69,8 +75,14 @@
       />
     </div>
 
-    <div v-if="filteredAndSortedDogs.length === 0" class="text-center text-gray-500 mt-8">
-      選択された条件に一致するわんちゃんは見つかりませんでした。
+    <div v-if="filteredAndSortedDogs.length === 0" class="text-center mt-12 py-8 bg-white rounded-lg shadow-md border border-orange-100">
+      <p class="text-gray-600 text-xl font-medium mb-4">
+        <span class="material-icons text-4xl text-orange-500 block mb-2">pets</span>
+        ご希望の条件に合うわんちゃんは見つかりませんでした。
+      </p>
+      <p class="text-gray-500">
+        条件を変更して再度お探しください。
+      </p>
     </div>
   </div>
 </template>
@@ -93,6 +105,7 @@ onMounted(async () => {
     allDogs.value = fetchedDogs; // 取得したデータをallDogsに保存
   } catch (error) {
     console.error('犬データ取得エラー:', error);
+    // ユーザーフレンドリーなエラーメッセージを表示するなどの処理を追加
   }
 });
 
@@ -104,7 +117,7 @@ const availableBreeds = computed(() => {
       breeds.add(dog.breed);
     }
   });
-  // Setを配列に変換し、アルファベット順にソート (任意)
+  // Setを配列に変換し、アルファベット順にソート
   return Array.from(breeds).sort();
 });
 
@@ -141,5 +154,4 @@ function goToDetail(id) {
 </script>
 
 <style scoped>
-/* 必要であれば追加のスタイルをここに記述 */
 </style>

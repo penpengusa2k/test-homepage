@@ -1,9 +1,18 @@
 <template>
-  <div class="notification-detail max-w-4xl mx-auto p-8 bg-white shadow-md rounded-lg">
-    <small v-if="date" class="text-gray-500 text-sm">{{ date }}</small>
-    <h1 class="text-3xl font-bold mt-1 mb-6 text-gray-800">{{ title }}</h1>
-    
-    <div class="markdown-content" v-html="contentHtml"></div>
+  <div class="bg-peach-50 min-h-screen py-10">
+    <div class="notification-detail max-w-4xl mx-auto p-6 sm:p-8 bg-white shadow-xl rounded-2xl border border-peach-200">
+      <small v-if="date" class="text-gray-500 text-base block mb-2">{{ date }}</small>
+      <h1 class="text-3xl sm:text-4xl font-extrabold mt-1 mb-6 text-orange-700 leading-tight">
+        {{ title }}
+      </h1>
+      
+      <div class="markdown-content" v-html="contentHtml"></div>
+
+      <div v-if="contentHtml.length === 0 && !title" class="text-center py-8">
+        <p class="text-red-500 text-lg font-semibold">お知らせが見つかりませんでした。</p>
+        <p class="text-gray-600 mt-2">指定されたURLをご確認ください。</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -72,9 +81,9 @@ async function loadDetail() {
 
   if (!matchedKey) {
     // ファイルが見つからない場合
-    contentHtml.value = '<p class="text-red-500">お知らせが見つかりませんでした。</p>'
+    contentHtml.value = '' // コンテンツを空にする
     date.value = ''
-    title.value = 'エラー'
+    title.value = 'お知らせが見つかりません' // 見つからない旨のタイトル
     return
   }
 
@@ -109,7 +118,7 @@ v-html でレンダリングされるコンテンツの内部要素（h2, p, ul,
   font-weight: 700; /* font-bold */
   margin-top: 1.5em;
   margin-bottom: 0.75em;
-  color: #1a202c; /* gray-900 */
+  color: #E65C00; /* orange-700 */
 }
 
 .markdown-content h2 {
@@ -117,7 +126,7 @@ v-html でレンダリングされるコンテンツの内部要素（h2, p, ul,
   font-weight: 700;
   margin-top: 1.25em;
   margin-bottom: 0.5em;
-  color: #2d3748; /* gray-800 */
+  color: #FF7F50; /* orange-600 */
 }
 
 .markdown-content h3 {
@@ -125,83 +134,118 @@ v-html でレンダリングされるコンテンツの内部要素（h2, p, ul,
   font-weight: 700;
   margin-top: 1em;
   margin-bottom: 0.5em;
-  color: #4a5568; /* gray-700 */
+  color: #FF8C00; /* orange-500 */
 }
 
 .markdown-content p {
   margin-bottom: 1em;
-  line-height: 1.75; /* leading-relaxed */
-  color: #4a5568; /* gray-700 */
+  line-height: 1.8; /* leading-relaxedより少し広めに */
+  color: #4A5568; /* gray-700 */
 }
 
 .markdown-content ul,
 .markdown-content ol {
   margin-bottom: 1em;
-  padding-left: 1.5em;
-  color: #4a5568; /* gray-700 */
+  padding-left: 1.8em; /* 少し広めに */
+  color: #4A5568; /* gray-700 */
 }
 
 .markdown-content ul li {
   list-style-type: disc;
-  margin-bottom: 0.5em;
+  margin-bottom: 0.6em; /* 少し広めに */
 }
 
 .markdown-content ol li {
   list-style-type: decimal;
-  margin-bottom: 0.5em;
+  margin-bottom: 0.6em; /* 少し広めに */
 }
 
 .markdown-content a {
-  color: #3182ce; /* blue-600 */
+  color: #FF7F50; /* orange-600 */
   text-decoration: underline;
+  transition: color 0.2s ease;
+}
+.markdown-content a:hover {
+  color: #E65C00; /* orange-700 */
 }
 
+
+.markdown-content strong {
+  color: #E65C00; /* orange-700 */
+  font-weight: bold;
+}
+
+.markdown-content em {
+  font-style: italic;
+  color: #FF8C00; /* orange-500 */
+}
+
+
 .markdown-content pre {
-  background-color: #f7fafc; /* gray-100 */
-  padding: 1rem;
-  border-radius: 0.25rem;
+  background-color: #FFF8F2; /* peach-50 */
+  padding: 1.5rem;
+  border-radius: 0.5rem;
   overflow-x: auto;
-  margin-bottom: 1em;
+  margin-bottom: 1.5em;
+  border: 1px solid #FFE5B4; /* peach-200 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .markdown-content code {
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
-  background-color: #edf2f7; /* gray-200 */
+  background-color: #FFEECC; /* peach-100 */
   padding: 0.2em 0.4em;
   border-radius: 0.25em;
+  color: #E65C00; /* orange-700 */
 }
 
 .markdown-content pre code {
   background-color: transparent;
   padding: 0;
   border-radius: 0;
+  color: inherit; /* pre内のコードの色は継承 */
 }
 
 /* Optional: Add styles for blockquote, table etc. as needed */
 .markdown-content blockquote {
-  border-left: 4px solid #cbd5e0; /* gray-300 */
-  padding-left: 1rem;
-  margin-left: 0;
+  border-left: 5px solid #FFDAB9; /* peach-500 */
+  padding-left: 1.5rem;
+  margin: 1.5em 0; /* 上下左右のマージン */
   font-style: italic;
   color: #718096; /* gray-600 */
+  background-color: #FFF8F2; /* peach-50 */
+  border-radius: 0 0.5rem 0.5rem 0; /* 右側だけ角丸 */
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
 .markdown-content table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 1em;
+  margin-bottom: 1.5em;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .markdown-content th,
 .markdown-content td {
-  border: 1px solid #e2e8f0; /* gray-200 */
-  padding: 0.75rem;
+  border: 1px solid #FFE5B4; /* peach-200 */
+  padding: 1rem;
   text-align: left;
 }
 
 .markdown-content th {
-  background-color: #f7fafc; /* gray-100 */
+  background-color: #FFEECC; /* peach-100 */
   font-weight: 600;
+  color: #E65C00; /* orange-700 */
+}
+
+.markdown-content img {
+  max-width: 100%;
+  height: auto;
+  display: block; /* 中央寄せ用 */
+  margin: 1.5em auto; /* 上下のマージンと中央寄せ */
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 </style>
 
