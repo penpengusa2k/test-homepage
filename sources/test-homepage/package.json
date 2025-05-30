@@ -16,6 +16,7 @@
     "gray-matter": "^4.0.3",
     "highlight.js": "^11.11.1",
     "markdown-it": "^14.1.0",
+    "photoswipe": "^5.4.4",
     "pinch-zoom-js": "^2.3.5",
     "swiper": "^11.2.8",
     "vite-plugin-markdown": "^2.2.0",

@@ -36,39 +36,7 @@
           </SwiperSlide>
         </Swiper>
 
-        <div
-          v-if="modalOpen"
-          class="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-4"
-          @click.self="closeModal"
-          @touchstart.self="closeModal"
-        >
-          <Swiper
-            :modules="[Navigation, Pagination]"
-            :slides-per-view="1"
-            :initial-slide="currentIndex"
-            navigation
-            pagination
-            loop
-            class="w-full max-w-4xl max-h-[90vh]"
-            @click="closeModal"
-          >
-            <SwiperSlide
-              v-for="(image, index) in dog.images"
-              :key="'modal-' + index"
-            >
-              <pinch-zoom class="block max-h-[90vh] overflow-hidden">
-                <img
-                  :src="image.url"
-                  :alt="`${dog.name}の画像 ${index + 1}`"
-                  class="w-full h-full object-contain mx-auto"
-                />
-              </pinch-zoom>
-            </SwiperSlide>
-          </Swiper>
-          <button @click="closeModal" class="absolute top-4 right-4 text-white text-5xl font-light z-50 p-2">
-            &times;
-          </button>
-        </div>
+        <!-- PhotoSwipeのモーダルはJSで生成するのでテンプレート不要 -->
       </div>
 
       <div class="md:w-1/2 w-full mt-6 md:mt-0 bg-white p-6 rounded-2xl shadow-lg border border-peach-200">
@@ -115,55 +83,47 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed, nextTick } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Pagination, Navigation } from 'swiper/modules';
+import { Pagination } from 'swiper/modules';
 import { fetchDogById } from '@/api/fetchDogs';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import 'swiper/css/navigation';
-import 'pinch-zoom-js';
+
+import PhotoSwipeLightbox from 'photoswipe/lightbox';
+import 'photoswipe/style.css';
 
 const route = useRoute();
 const dog = ref(null);
-const modalOpen = ref(false);
-const currentIndex = ref(0);
+const lightbox = ref(null);
 
 function openModal(index) {
-  currentIndex.value = index;
-  modalOpen.value = true;
-  document.body.style.overflow = 'hidden';
-  nextTick(() => {
-    document.querySelectorAll('pinch-zoom').forEach((el) => {
-      el.reset && el.reset();
-    });
-  });
-}
-
-function closeModal() {
-  modalOpen.value = false;
-  document.body.style.overflow = '';
-}
-
-function handleKeydown(e) {
-  if (e.key === 'Escape') {
-    closeModal();
-  }
+  if (!lightbox.value) return;
+  lightbox.value.loadAndOpen(index);
 }
 
 onMounted(async () => {
-  document.addEventListener('keydown', handleKeydown);
   try {
     dog.value = await fetchDogById(route.params.id);
   } catch (error) {
     console.error('犬詳細データ取得エラー:', error);
   }
+
+  // PhotoSwipeの初期化
+  lightbox.value = new PhotoSwipeLightbox({
+    gallery: '.swiper', // Swiperの親クラスを指定
+    children: 'img', // 子要素（画像）を指定
+    pswpModule: () => import('photoswipe'),
+  });
+  lightbox.value.init();
 });
 
 onUnmounted(() => {
-  document.removeEventListener('keydown', handleKeydown);
-  document.body.style.overflow = '';
+  if (lightbox.value) {
+    lightbox.value.destroy();
+    lightbox.value = null;
+  }
 });
 
 function formatDate(dateStr) {
@@ -213,6 +173,4 @@ const details = computed(() => {
 .status-badge {
   white-space: nowrap;
 }
-
-/* 必要に応じてswiperのページネーションの色調整 */
 </style>
