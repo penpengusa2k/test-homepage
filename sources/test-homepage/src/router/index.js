@@ -24,6 +24,16 @@ const routes = [
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    // savedPosition がある場合（ブラウザの「戻る」「進む」ボタンなど）
+    if (savedPosition) {
+      return savedPosition;
+    } else {
+      // それ以外の場合（新しいページに遷移した場合）はトップにスクロール
+      // スムーズなスクロールを希望する場合は behavior: 'smooth' を追加
+      return { top: 0, left: 0 };
+    }
+  },
 })
 
 export default router

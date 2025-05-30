@@ -8,7 +8,7 @@
       <img
         :src="dog.images?.[0]?.url"
         alt="犬の写真"
-        class="w-full h-full object-cover bg-peach-50"
+        class="w-full h-full object-include bg-peach-50"
       />
 
       <div

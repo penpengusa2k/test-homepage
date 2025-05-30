@@ -31,7 +31,7 @@
             <img
               :src="image.url"
               :alt="`${dog.name}の画像 ${index + 1}`"
-              class="w-full h-full object-contain"
+              class="w-full h-full object-cover"
             />
           </SwiperSlide>
         </Swiper>
@@ -56,11 +56,18 @@
               v-for="(image, index) in dog.images"
               :key="'modal-' + index"
             >
-              <img
-                :src="image.url"
-                :alt="`${dog.name}の画像 ${index + 1}`"
-                class="w-full h-full object-contain mx-auto"
-              />
+                <PanZoom
+                :auto-center="true"
+                :disable-double-click-zoom="false"
+                class="w-full h-full flex items-center justify-center"
+                >
+                <img
+                    :src="image.url"
+                    :alt="`${dog.name}の画像 ${index + 1}`"
+                    class="max-w-full max-h-[90vh] object-contain"
+                />
+                </PanZoom>
+
             </SwiperSlide>
           </Swiper>
           <button @click="closeModal" class="absolute top-4 right-4 text-white text-5xl font-light z-50 p-2">
@@ -74,7 +81,7 @@
           <div
             v-for="(item, index) in details"
             :key="index"
-            class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4 py-3 border-b border-orange-100 last:border-b-0"
+            class="grid grid-cols-1 grid-cols-2 gap-y-2 gap-x-4 py-3 border-b border-orange-100 last:border-b-0"
           >
             <div>
               <span class="font-bold text-orange-700 text-lg">{{ item.label1 }}</span><br />
@@ -121,6 +128,7 @@ import { fetchDogById } from '@/api/fetchDogs';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
+import { PanZoom } from 'vue-panzoom';
 
 const route = useRoute();
 const dog = ref(null);
