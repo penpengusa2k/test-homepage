@@ -56,18 +56,13 @@
               v-for="(image, index) in dog.images"
               :key="'modal-' + index"
             >
-                <PanZoom
-                :auto-center="true"
-                :disable-double-click-zoom="false"
-                class="w-full h-full flex items-center justify-center"
-                >
+              <pinch-zoom class="block max-h-[90vh] overflow-hidden">
                 <img
-                    :src="image.url"
-                    :alt="`${dog.name}の画像 ${index + 1}`"
-                    class="max-w-full max-h-[90vh] object-contain"
+                  :src="image.url"
+                  :alt="`${dog.name}の画像 ${index + 1}`"
+                  class="w-full h-full object-contain mx-auto"
                 />
-                </PanZoom>
-
+              </pinch-zoom>
             </SwiperSlide>
           </Swiper>
           <button @click="closeModal" class="absolute top-4 right-4 text-white text-5xl font-light z-50 p-2">
@@ -98,29 +93,29 @@
     </div>
 
     <div class="w-full text-center mt-12">
-        <template v-if="dog.status === '譲渡済'">
-            <div
-            class="inline-flex flex-col items-center justify-center bg-gray-200 text-gray-600 py-6 px-8 rounded-full text-2xl font-bold w-full max-w-md mx-auto cursor-not-allowed shadow-md"
-            >
-            <span class="material-icons text-4xl mb-2">info</span>
-            このわんちゃんは新しい家族と幸せに暮らしています
-            </div>
-        </template>
-        <template v-else>
-            <router-link
-            to="/contact"
-            class="inline-flex flex-col sm:flex-row items-center justify-center bg-gradient-to-r from-orange-400 to-peach-500 text-white py-5 px-8 rounded-full hover:bg-orange-500 transition duration-300 ease-in-out text-2xl font-bold w-full max-w-md mx-auto shadow-lg transform hover:scale-105"
-            >
-            <span class="material-icons text-3xl mr-0 sm:mr-3 mb-2 sm:mb-0">mail</span>
-            このわんちゃんについて<br class="sm:hidden" />お問い合わせする
-            </router-link>
-        </template>
+      <template v-if="dog.status === '譲渡済'">
+        <div
+          class="inline-flex flex-col items-center justify-center bg-gray-200 text-gray-600 py-6 px-8 rounded-full text-2xl font-bold w-full max-w-md mx-auto cursor-not-allowed shadow-md"
+        >
+          <span class="material-icons text-4xl mb-2">info</span>
+          このわんちゃんは新しい家族と幸せに暮らしています
+        </div>
+      </template>
+      <template v-else>
+        <router-link
+          to="/contact"
+          class="inline-flex flex-col sm:flex-row items-center justify-center bg-gradient-to-r from-orange-400 to-peach-500 text-white py-5 px-8 rounded-full hover:bg-orange-500 transition duration-300 ease-in-out text-2xl font-bold w-full max-w-md mx-auto shadow-lg transform hover:scale-105"
+        >
+          <span class="material-icons text-3xl mr-0 sm:mr-3 mb-2 sm:mb-0">mail</span>
+          このわんちゃんについて<br class="sm:hidden" />お問い合わせする
+        </router-link>
+      </template>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from 'vue';
+import { ref, onMounted, onUnmounted, computed, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Pagination, Navigation } from 'swiper/modules';
@@ -128,7 +123,7 @@ import { fetchDogById } from '@/api/fetchDogs';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import { PanZoom } from 'vue-panzoom';
+import 'pinch-zoom-js';
 
 const route = useRoute();
 const dog = ref(null);
@@ -138,13 +133,16 @@ const currentIndex = ref(0);
 function openModal(index) {
   currentIndex.value = index;
   modalOpen.value = true;
-  // モーダル表示時にbodyのスクロールを無効にする
   document.body.style.overflow = 'hidden';
+  nextTick(() => {
+    document.querySelectorAll('pinch-zoom').forEach((el) => {
+      el.reset && el.reset();
+    });
+  });
 }
 
 function closeModal() {
   modalOpen.value = false;
-  // モーダル非表示時にbodyのスクロールを有効にする
   document.body.style.overflow = '';
 }
 
@@ -160,20 +158,17 @@ onMounted(async () => {
     dog.value = await fetchDogById(route.params.id);
   } catch (error) {
     console.error('犬詳細データ取得エラー:', error);
-    // エラー時のUI表示やリダイレクトなどの処理を追加
   }
 });
 
 onUnmounted(() => {
   document.removeEventListener('keydown', handleKeydown);
-  // コンポーネントがアンマウントされる際にもbodyのoverflowをリセット
   document.body.style.overflow = '';
 });
 
 function formatDate(dateStr) {
   if (!dateStr) return '不明';
   const date = new Date(dateStr);
-  // Dateオブジェクトが不正な場合は'不明'を返す
   if (isNaN(date.getTime())) return '不明';
   return date.toLocaleDateString('ja-JP');
 }
@@ -181,12 +176,11 @@ function formatDate(dateStr) {
 const details = computed(() => {
   if (!dog.value) return [];
 
-  // 値が存在しない場合に「不明」を返すヘルパー関数
   const getValueOrDefault = (value, defaultValue = '不明') => {
     return value !== null && value !== undefined && value !== '' ? value : defaultValue;
   };
 
-  const list = [
+  return [
     {
       label1: '犬種',
       value1: getValueOrDefault(dog.value.breed),
@@ -212,19 +206,13 @@ const details = computed(() => {
       value2: getValueOrDefault(dog.value.notes, '特になし'),
     },
   ];
-
-  return list;
 });
 </script>
 
 <style scoped>
-/* モーダル表示時のbodyスクロール制御はscript側で対応 */
-/* ステータスバッジのスタイルはDogCardコンポーネントと共通化しても良いかもしれません */
 .status-badge {
   white-space: nowrap;
 }
 
-/* スライダーのページネーション（ドット）の色を調整したい場合 */
-/* グローバルスタイルか、deepセレクターで対応が必要になることがあります */
-/* 例: .swiper-pagination-bullet-active { background-color: #FF7F50 !important; } */
+/* 必要に応じてswiperのページネーションの色調整 */
 </style>
