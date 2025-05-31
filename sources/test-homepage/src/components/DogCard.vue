@@ -47,7 +47,7 @@
         <span
           class="status-badge px-3 py-1 rounded-full text-sm font-semibold"
           :class="{
-            'bg-green-100 text-green-700': dog.status === '募集中',
+            'bg-green-100 text-green-700': dog.status === '里親募集中',
             'bg-blue-100 text-blue-700': dog.status === 'トライアル中',
             'bg-gray-200 text-gray-600': dog.status === '譲渡済'
           }"

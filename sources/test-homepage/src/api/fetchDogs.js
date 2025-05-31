@@ -18,20 +18,37 @@ const microcmsClient = axios.create({
  * @returns {object} - 整形された犬データオブジェクト
  */
 function formatDogData(dogData) {
+  // 日付を「YYYY年M月D日」形式にフォーマットするヘルパー関数
+  // 値がない場合や不正な日付の場合は'不明'を返す
+  const formatDate = (dateString) => {
+    if (!dateString) {
+      return '不明';
+    }
+    const date = new Date(dateString);
+    // Dateオブジェクトが不正な日付（例: 無効な日付文字列）を示す場合は'不明'を返す
+    if (isNaN(date.getTime())) {
+      return '不明';
+    }
+    return date.toLocaleDateString('ja-JP', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
   return {
     id: dogData.id,
     name: dogData.name,
-    images: dogData.images || [], // 画像がない場合のデフォルト値
-    breed: dogData.breed || '不明', // 犬種がない場合のデフォルト値
-    age: dogData.age || null, // 年齢がない場合のデフォルト値
-    gender: Array.isArray(dogData.gender) ? dogData.gender[0] : '', // 配列でない場合も考慮
-    status: Array.isArray(dogData.status) ? dogData.status[0] : '', // 配列でない場合も考慮
-    weight: dogData.weight || null, // 体重がない場合のデフォルト値
-    character: dogData.character || '不明', // 性格がない場合のデフォルト値
-    health: dogData.health || '不明', // 健康状態がない場合のデフォルト値
-    rescueDate: dogData.rescueDate || null, // 保護日がない場合のデフォルト値
-    birthday: dogData.birthday || null, // 誕生日がない場合のデフォルト値
-    // 必要に応じてnotesなどのフィールドも追加
+    images: dogData.images,
+    breed: dogData.breed,
+    notes: dogData.notes || '特になし',
+    gender: dogData.gender[0],
+    status: dogData.status[0],
+    weight: `${dogData.weight} kg`,
+    character: dogData.character,
+    health: dogData.health,
+    rescueDate: formatDate(dogData.rescueDate), // ★修正: formatDogData内で変換
+    birthday: formatDate(dogData.birthday),     // ★修正: formatDogData内で変換
   };
 }
 

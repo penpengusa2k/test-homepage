@@ -39,10 +39,10 @@
             <input
               type="radio"
               v-model="selectedStatus"
-              value="募集中"
+              value="里親募集中"
               class="form-radio h-5 w-5 text-orange-600 border-orange-300 focus:ring-orange-400 transition duration-150 ease-in-out"
             />
-            <span class="ml-2 text-gray-700 text-base">募集中</span>
+            <span class="ml-2 text-gray-700 text-base">里親募集中</span>
           </label>
           <label class="inline-flex items-center cursor-pointer">
             <input
