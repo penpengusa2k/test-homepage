@@ -3,7 +3,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
       <router-link to="/" class="flex items-center space-x-2 text-xl font-bold text-orange-600">
         <img src="@/assets/logo.png" alt="ロゴ" class="h-8 w-8" />
-        <span>里親カフェ</span>
+        <span>INUカフェ</span>
       </router-link>
 
       <button @click="toggleMenu" class="md:hidden focus:outline-none" aria-label="Toggle navigation menu">
@@ -20,7 +20,7 @@
         </router-link>
         <router-link to="/about" class="flex items-center space-x-1 hover:text-orange-600">
           <span class="material-icons text-base">info</span>
-          <span>里親カフェとは</span>
+          <span>INUカフェとは</span>
         </router-link>
         <router-link to="/dogList" class="flex items-center space-x-1 hover:text-orange-600">
           <span class="material-icons text-base">pets</span>
@@ -55,7 +55,7 @@
           </router-link>
           <router-link to="/about" @click="closeMenu" class="flex items-center space-x-1 hover:text-orange-600">
             <span class="material-icons text-base">info</span>
-            <span>里親カフェとは</span>
+            <span>INUカフェとは</span>
           </router-link>
           <router-link to="/dogList" @click="closeMenu" class="flex items-center space-x-1 hover:text-orange-600">
             <span class="material-icons text-base">pets</span>

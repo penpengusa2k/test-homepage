@@ -1,9 +1,9 @@
 <template>
     <div class="p-6 bg-peach-50 min-h-screen">
       <div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <h1 class="text-3xl sm:text-4xl font-extrabold text-center text-orange-700 mb-8">里親カフェとは</h1>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-center text-orange-700 mb-8">INUカフェとは</h1>
         <p class="text-gray-700 text-lg leading-relaxed text-center mb-6">
-          里親カフェは、保護犬と新しい家族との出会いをサポートする、心温まる場所です。<br>
+          INUカフェは、保護犬と新しい家族との出会いをサポートする、心温まる場所です。<br>
           ここでは、愛らしい保護犬たちと触れ合いながら、里親制度について深く学び、
           同じ思いを持つ人々との交流を深めることができます。
         </p>

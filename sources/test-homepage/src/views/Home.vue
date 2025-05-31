@@ -4,7 +4,7 @@
 
     <section class="py-16 bg-peach-50">
       <div class="max-w-7xl mx-auto px-4 text-center">
-        <h2 class="text-4xl font-extrabold text-orange-700 mb-6">里親カフェとは？</h2>
+        <h2 class="text-4xl font-extrabold text-orange-700 mb-6">INUカフェとは？</h2>
         <p class="text-gray-700 text-lg max-w-2xl mx-auto leading-relaxed">
           里親制度や子どもたちの現状について、誰もが気軽に学び、話し合える場です。
           温かいコーヒーを片手に、保護犬たちと触れ合いながら、新しい家族との出会いをサポートします。
