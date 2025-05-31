@@ -1,54 +1,58 @@
 <template>
-  <div class="notifications bg-peach-50 min-h-screen py-10">
-    <div class="max-w-4xl mx-auto px-4">
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-orange-700 text-center mb-8">
+  <div class="bg-gray-50 min-h-screen pt-20 pb-16"> <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="text-4xl sm:text-5xl font-extrabold text-orange-700 text-center mb-6 drop-shadow-md">
         お知らせ
       </h1>
+      <p class="text-center text-gray-700 text-lg sm:text-xl leading-relaxed mb-12 max-w-2xl mx-auto">
+        INUカフェからの最新情報やイベント情報、保護犬たちの嬉しいニュースなどをお届けします。
+      </p>
 
       <div class="notice-list space-y-6">
-        <div 
-          v-for="notice in pagedNotices" 
-          :key="notice.filename" 
-          class="notice-card bg-white rounded-xl shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-300 ease-in-out border border-peach-200" 
+        <div
+          v-for="notice in pagedNotices"
+          :key="notice.filename"
+          class="notice-card bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-[1.005] border border-peach-100"
           @click="goDetail(notice.filename)"
         >
           <div class="p-6">
-            <small class="text-sm text-gray-500 block mb-2">{{ notice.date }}</small>
-            <h2 class="text-xl font-bold text-orange-600 mb-2 leading-snug">{{ notice.title }}</h2>
-            <p class="text-gray-700 text-base line-clamp-2">{{ notice.summary }}</p>
+            <time :datetime="notice.date" class="text-sm text-gray-500 font-medium block mb-2">{{ notice.date }}</time>
+            <h2 class="text-xl sm:text-2xl font-bold text-orange-600 mb-3 leading-snug">{{ notice.title }}</h2>
+            <p class="text-gray-700 text-base sm:text-lg line-clamp-2">{{ notice.summary }}</p>
           </div>
         </div>
       </div>
 
-      <div v-if="pageCount > 1" class="pagination flex justify-center items-center gap-3 mt-10">
-        <button 
-          @click="goPage(currentPage - 1)" 
+      <div v-if="pageCount > 1" class="pagination flex justify-center items-center gap-2 mt-10">
+        <button
+          @click="goPage(currentPage - 1)"
           :disabled="currentPage === 1"
-          class="px-4 py-2 rounded-lg border border-orange-300 bg-white text-orange-600 font-semibold shadow-sm hover:bg-peach-100 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200"
+          class="flex items-center px-4 py-2 rounded-lg border border-orange-300 bg-white text-orange-600 font-semibold shadow-sm hover:bg-peach-100 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200"
           aria-label="前のページ"
         >
-          &lt; 前へ
+          <span class="material-icons text-xl mr-1">chevron_left</span>
+          前へ
         </button>
         <button
           v-for="n in pageCount"
           :key="n"
           @click="goPage(n)"
-          :class="{ 
-            'bg-orange-600 text-white shadow-md': n === currentPage, 
-            'bg-white text-gray-700 border border-orange-300 hover:bg-peach-100': n !== currentPage 
+          :class="{
+            'bg-orange-600 text-white shadow-md transform scale-105': n === currentPage,
+            'bg-white text-gray-700 border border-orange-300 hover:bg-peach-100': n !== currentPage
           }"
           class="px-4 py-2 rounded-lg font-semibold transition duration-200"
           :aria-current="n === currentPage ? 'page' : undefined"
         >
           {{ n }}
         </button>
-        <button 
-          @click="goPage(currentPage + 1)" 
+        <button
+          @click="goPage(currentPage + 1)"
           :disabled="currentPage === pageCount"
-          class="px-4 py-2 rounded-lg border border-orange-300 bg-white text-orange-600 font-semibold shadow-sm hover:bg-peach-100 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200"
+          class="flex items-center px-4 py-2 rounded-lg border border-orange-300 bg-white text-orange-600 font-semibold shadow-sm hover:bg-peach-100 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200"
           aria-label="次のページ"
         >
-          次へ &gt;
+          次へ
+          <span class="material-icons text-xl ml-1">chevron_right</span>
         </button>
       </div>
     </div>
@@ -63,7 +67,7 @@ const notices = import.meta.glob('../notices/*.md', { query: '?raw', import: 'de
 
 const noticeList = ref([])
 const currentPage = ref(1)
-const itemsPerPage = 10
+const itemsPerPage = 10 // 1ページあたりの表示件数
 
 const router = useRouter()
 
@@ -75,7 +79,6 @@ function parseFilename(filename) {
     return { date: '', title: filename };
   }
   const [, date, rawTitle] = match
-  // ファイル名から取得したタイトルをデコードし、ハイフンをスペースに変換
   const title = decodeURIComponent(rawTitle.replace(/-/g, ' '));
   return { date, title }
 }
@@ -131,13 +134,9 @@ onMounted(loadNotices)
 </script>
 
 <style scoped>
-/* スタイルはTailwind CSSクラスでほとんど置き換えられたため、ここには最小限の調整のみ残します */
-/* もしカスタムフォントを使用する場合は、グローバルCSSで設定してください */
-
-/* line-clamp-2 は Tailwind CSS のプラグインが必要な場合があります */
-/* tailwind.config.js に require('@tailwindcss/line-clamp') を追加してください */
-/* plugins: [
- * require('@tailwindcss/line-clamp'),
- * ],
- */
+/* Tailwind CSSのline-clampプラグインは、tailwind.config.jsで有効にする必要があります。
+   plugins: [
+     require('@tailwindcss/line-clamp'),
+   ],
+*/
 </style>
