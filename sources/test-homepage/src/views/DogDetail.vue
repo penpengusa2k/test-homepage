@@ -95,7 +95,7 @@
           <template v-else>
             <router-link
               to="/contact"
-              class="inline-flex flex-col sm:flex-row items-center justify-center bg-orange-400 text-white py-5 px-8 rounded-xl hover:bg-orange-500 transition duration-300 ease-in-out text-2xl font-bold w-full max-w-md mx-auto shadow-lg transform hover:scale-105"
+              class="inline-flex flex-col sm:flex-row items-center justify-center bg-orange-600 text-white py-5 px-8 rounded-xl hover:bg-orange-700 transition duration-300 ease-in-out text-2xl font-bold w-full max-w-md mx-auto shadow-lg transform hover:scale-105"
             >
               <span class="material-icons text-3xl mr-0 sm:mr-3 mb-2 sm:mb-0">mail</span>
               このわんちゃんについて<br class="sm:hidden" />お問い合わせする

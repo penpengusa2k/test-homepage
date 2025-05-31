@@ -13,7 +13,66 @@
       </div>
     </section>
 
-    <!-- 新しい家族を待つわんちゃんたち（3件） -->
+    <section class="py-16 bg-white shadow-inner">
+      <div class="max-w-7xl mx-auto px-4">
+        <h2 class="text-3xl font-extrabold text-orange-700 text-center mb-10">譲渡までのステップ</h2>
+        
+        <div class="space-y-10">
+          <div class="flex flex-col md:flex-row items-center md:items-start gap-6 bg-peach-50 p-6 rounded-xl shadow-md">
+            <div class="flex-shrink-0 flex items-center justify-center w-16 h-16 rounded-full bg-orange-400 text-white text-3xl font-bold">
+              1
+            </div>
+            <div class="text-center md:text-left flex-grow">
+              <h3 class="text-2xl font-bold text-orange-600 mb-2">お問い合わせ・事前アンケート</h3>
+              <p class="text-gray-700 text-lg">
+                ご希望のわんちゃんについてお問い合わせください。
+                家族構成や飼育環境に関する簡単なアンケートにお答えいただき、事前審査を行います。
+                ご質問やご相談もお気軽にご記入ください。
+              </p>
+            </div>
+          </div>
+
+          <div class="flex flex-col md:flex-row items-center md:items-start gap-6 bg-peach-50 p-6 rounded-xl shadow-md">
+            <div class="flex-shrink-0 flex items-center justify-center w-16 h-16 rounded-full bg-orange-400 text-white text-3xl font-bold">
+              2
+            </div>
+            <div class="text-center md:text-left flex-grow">
+              <h3 class="text-2xl font-bold text-orange-600 mb-2">面談・お見合い</h3>
+              <p class="text-gray-700 text-lg">
+                事前アンケートを基に、当カフェにてスタッフとの面談を行います。
+                わんちゃんの性格や特徴、飼育に関するご説明をさせていただきます。
+                その後、実際にわんちゃんと触れ合い、相性を確認するお見合いの時間を設けます。
+              </p>
+            </div>
+          </div>
+
+          <div class="flex flex-col md:flex-row items-center md:items-start gap-6 bg-peach-50 p-6 rounded-xl shadow-md">
+            <div class="flex-shrink-0 flex items-center justify-center w-16 h-16 rounded-full bg-orange-400 text-white text-3xl font-bold">
+              3
+            </div>
+            <div class="text-center md:text-left flex-grow">
+              <h3 class="text-2xl font-bold text-orange-600 mb-2">トライアル期間・正式譲渡</h3>
+              <p class="text-gray-700 text-lg">
+                面談・お見合いを経て、わんちゃんとご家族の相性が良いと判断された場合、
+                数週間のトライアル期間を設けます。この期間中にわんちゃんとの生活を体験し、
+                最終的に問題がなければ、正式な譲渡手続きへと進みます。
+                新しい家族の一員として、わんちゃんを温かくお迎えください。
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="text-center mt-12">
+          <router-link
+            to="/contact"
+            class="inline-flex items-center justify-center bg-orange-600 text-white py-4 px-8 rounded-full hover:bg-orange-700 transition duration-300 ease-in-out text-xl font-bold shadow-lg transform hover:scale-105"
+          >
+            <span class="material-icons text-3xl mr-3">mail</span>
+            お問い合わせはこちら
+          </router-link>
+        </div>
+      </div>
+    </section>
     <section
       v-if="limitedDogs.length > 0"
       class="mb-12"
