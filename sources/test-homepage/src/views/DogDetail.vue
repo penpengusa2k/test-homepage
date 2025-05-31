@@ -1,22 +1,5 @@
 <template>
   <div class="max-w-6xl mx-auto px-4 py-10 bg-peach-50 rounded-lg" v-if="dog">
-    <!-- 犬名・詳細見出し -->
-    <div class="text-center mb-8">
-      <div class="inline-flex flex-col sm:flex-row sm:items-center gap-2 justify-center">
-        <h1 class="text-4xl font-extrabold text-orange-700">{{ dog.name }}</h1>
-        <span
-          class="status-badge px-4 py-1.5 rounded-full text-lg font-semibold"
-          :class="{
-            'bg-green-100 text-green-700': dog.status === '里親募集中',
-            'bg-blue-100 text-blue-700': dog.status === 'トライアル中',
-            'bg-gray-200 text-gray-600': dog.status === '譲渡済'
-          }"
-        >
-          {{ dog.status }}
-        </span>
-      </div>
-    </div>
-
     <div class="flex flex-col md:flex-row gap-8 items-start">
       <!-- 画像部分 -->
       <div class="md:w-1/2 w-full">
@@ -70,7 +53,7 @@
         </div>
       </div>
 
-      <!-- 詳細部分 -->
+      <!-- 詳細情報 -->
       <div class="md:w-1/2 w-full">
         <div
           v-for="(detail, index) in details"
@@ -83,8 +66,41 @@
           </div>
           <div v-if="detail.label2" class="w-1/2 pl-4 border-l border-peach-200">
             <p class="font-semibold text-peach-900">{{ detail.label2 }}</p>
-            <p class="text-peach-700">{{ detail.value2 }}</p>
+            <p v-if="detail.label2 === 'ステータス'">
+              <span
+                :class="{
+                  'text-green-700': detail.value2 === '里親募集中',
+                  'text-blue-700': detail.value2 === 'トライアル中',
+                  'text-gray-600': detail.value2 === '譲渡済'
+                }"
+              >
+                {{ detail.value2 }}
+              </span>
+            </p>
+            <p class="text-peach-700" v-else>{{ detail.value2 }}</p>
           </div>
+        </div>
+
+
+        <!-- ボタン -->
+        <div class="w-full text-center mt-12">
+          <template v-if="dog.status === '譲渡済'">
+            <div
+              class="inline-flex flex-col items-center justify-center bg-gray-200 text-gray-600 py-6 px-8 rounded-xl text-2xl font-bold w-full max-w-md mx-auto cursor-not-allowed shadow-md"
+            >
+              <span class="material-icons text-4xl mb-2">info</span>
+              このわんちゃんは新しい家族と幸せに暮らしています
+            </div>
+          </template>
+          <template v-else>
+            <router-link
+              to="/contact"
+              class="inline-flex flex-col sm:flex-row items-center justify-center bg-orange-400 text-white py-5 px-8 rounded-xl hover:bg-orange-500 transition duration-300 ease-in-out text-2xl font-bold w-full max-w-md mx-auto shadow-lg transform hover:scale-105"
+            >
+              <span class="material-icons text-3xl mr-0 sm:mr-3 mb-2 sm:mb-0">mail</span>
+              このわんちゃんについて<br class="sm:hidden" />お問い合わせする
+            </router-link>
+          </template>
         </div>
       </div>
     </div>
@@ -102,14 +118,10 @@ const route = useRoute();
 const dog = ref(null);
 let lightbox = null;
 
-// 表示するサムネイル枚数（メイン画像は含まない）
 const displayCount = 3;
 
 const openPhotoSwipe = async (index = 0) => {
-  if (!dog.value || !dog.value.images || dog.value.images.length === 0) {
-    console.warn('画像がありません。PhotoSwipeを開けません。');
-    return;
-  }
+  if (!dog.value || !dog.value.images || dog.value.images.length === 0) return;
 
   const items = dog.value.images.map((img) => ({
     src: img.url,
@@ -146,11 +158,12 @@ onMounted(async () => {
   }
 });
 
-// 詳細情報を2列にまとめる computed
 const details = computed(() => {
   if (!dog.value) return [];
 
   const rawDetails = [
+    { label: '名前', value: dog.value.name },
+    { label: 'ステータス', value: dog.value.status },
     { label: '犬種', value: dog.value.breed },
     { label: '性別', value: dog.value.gender },
     { label: '誕生日', value: dog.value.birthday },
