@@ -13,6 +13,24 @@
       </div>
     </section>
 
+    <!-- 新しい家族を待つわんちゃんたち（3件） -->
+    <section
+      v-if="limitedDogs.length > 0"
+      class="mb-12"
+    >
+      <h2 class="text-2xl sm:text-3xl font-bold text-orange-700 mb-6 text-center">
+        新着のわんちゃんたち
+      </h2>
+      <div class="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+        <DogCard
+          v-for="dog in limitedDogs"
+          :key="dog.id"
+          :dog="dog"
+          @click="goToDetail(dog.id)"
+        />
+      </div>
+    </section>
+
     <section class="py-16 bg-white shadow-inner">
       <div class="max-w-7xl mx-auto px-4">
         <h2 class="text-3xl font-bold text-orange-600 mb-8 text-center">最新のお知らせ</h2>
@@ -31,7 +49,7 @@
             </div>
           </div>
 
-          <div v-if="notices.length > 3" class="flex justify-center mt-6">
+          <div v-if="notices.length > DISPLAY_COUNT" class="flex justify-center mt-6">
             <button
               @click="goNotifications"
               aria-label="お知らせ一覧へ"
@@ -63,35 +81,35 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-
 import HeroSection from '@/components/HeroSection.vue'
+import { fetchDogsWithoutAdopted } from '@/api/fetchDogs';
+import DogCard from '@/components/DogCard.vue';
 
-// Tailwind CSSのカスタムカラーを定義 (tailwind.config.jsに追加してください)
-// extend: {
-//   colors: {
-//     peach: {
-//       50: '#FFF8F2',   // 非常に薄いピーチ
-//       100: '#FFEECC',  // 薄いピーチ
-//       200: '#FFE5B4',  // 少し濃いピーチ
-//       500: '#FFDAB9',  // メインのピーチ
-//     },
-//     orange: {
-//       400: '#FFA07A',  // ヒーローセクションのボタンなど
-//       500: '#FF8C00',  // 少し濃いオレンジ
-//       600: '#FF7F50',  // メインのオレンジ
-//       700: '#E65C00',  // タイトルなど
-//     },
-//     mint: '#8FBC8F', // アクセントグリーン
-//   }
-// }
+const limitedDogs = ref([]);
 
+// 表示件数などの定数はここにまとめる
+const DISPLAY_COUNT = 3  // お知らせの表示件数
+const DOG_LIST_COUNT = 3   // 保護犬リスト取得件数（仮）
 
 const noticesRaw = import.meta.glob('../notices/*.md', { query: '?raw', import: 'default' })
 
-const notices = ref([])
+const notices = ref([])          // 全お知らせデータ
+const displayedNotices = ref([]) // 表示中のお知らせ
 
 const router = useRouter()
 
+onMounted(async () => {
+  try {
+    limitedDogs.value = await fetchDogsWithoutAdopted(DOG_LIST_COUNT); // 上位3件だけ取得
+  } catch (error) {
+    console.error('最新の犬情報取得エラー:', error);
+  }
+});
+
+/**
+ * ファイル名から日付とタイトルをパースする
+ * 例: "2025-05-01-犬のイベント.md" -> { date: "2025-05-01", title: "犬のイベント" }
+ */
 function parseFilename(filename) {
   const base = filename.replace('.md', '')
   const match = base.match(/^(\d{4}-\d{2}-\d{2})-(.+)$/)
@@ -99,10 +117,18 @@ function parseFilename(filename) {
     return { date: '', title: filename }
   }
   const [, date, rawTitle] = match
+  // タイトル部分のハイフンをスペースに変換し、URIデコード
   const title = decodeURIComponent(rawTitle.replace(/-/g, ' '))
   return { date, title }
 }
 
+function goToDetail(id) {
+  router.push(`/dogs/${id}`);
+}
+
+/**
+ * Markdownの中身からテキスト要約を作成
+ */
 function createSummary(content) {
   const plain = content
     .replace(/#+\s/g, '')             // 見出し記号削除
@@ -114,6 +140,9 @@ function createSummary(content) {
   return plain.slice(0, 100) + (plain.length > 100 ? '…' : '')
 }
 
+/**
+ * noticesフォルダ内のmdファイルを全件ロードし、解析してnotices配列に格納
+ */
 async function loadNotices() {
   const keys = Object.keys(noticesRaw).sort().reverse()
 
@@ -128,12 +157,17 @@ async function loadNotices() {
   notices.value = tmpList
 }
 
-const displayedNotices = ref([])
-
+/**
+ * お知らせ一覧ページへ遷移
+ */
 function goNotifications() {
   router.push('/notifications')
 }
 
+/**
+ * お知らせ詳細ページへ遷移
+ * @param {string} filename 
+ */
 function goDetail(filename) {
   const id = filename.replace('.md', '')
   router.push(`/notifications/${id}`)
@@ -141,12 +175,12 @@ function goDetail(filename) {
 
 onMounted(async () => {
   await loadNotices()
-  displayedNotices.value = notices.value.slice(0, 3)
+  // 先頭からDISPLAY_COUNT件だけ表示
+  displayedNotices.value = notices.value.slice(0, DISPLAY_COUNT)
 })
 </script>
 
 <style scoped>
-/* 個別のnotice-itemに影とトランジションを追加 */
 .notice-item {
   transition: all 0.3s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* 軽い影 */

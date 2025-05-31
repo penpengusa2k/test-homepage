@@ -5,6 +5,7 @@
     </h1>
 
     <div class="mb-10 bg-peach-100 p-6 rounded-2xl shadow-lg border border-peach-200">
+      <!-- 犬種で絞り込み -->
       <div class="mb-6">
         <label for="breed-select" class="block text-orange-700 text-lg font-bold mb-3">
           犬種で絞り込む:
@@ -21,7 +22,8 @@
         </select>
       </div>
 
-      <div>
+      <!-- ステータスで絞り込み -->
+      <div class="mb-6">
         <label class="block text-orange-700 text-lg font-bold mb-3">
           ステータスで絞り込む:
         </label>
@@ -64,6 +66,52 @@
           </label>
         </div>
       </div>
+
+      <!-- 性別で絞り込み -->
+      <div>
+        <label class="block text-orange-700 text-lg font-bold mb-3">
+          性別で絞り込む:
+        </label>
+        <div class="flex flex-wrap gap-x-6 gap-y-3">
+          <label class="inline-flex items-center cursor-pointer">
+            <input
+              type="radio"
+              v-model="selectedGender"
+              value=""
+              class="form-radio h-5 w-5 text-orange-600 border-orange-300 focus:ring-orange-400 transition duration-150 ease-in-out"
+            />
+            <span class="ml-2 text-gray-700 text-base">すべて</span>
+          </label>
+          <label class="inline-flex items-center cursor-pointer">
+            <input
+              type="radio"
+              v-model="selectedGender"
+              value="男の子"
+              class="form-radio h-5 w-5 text-orange-600 border-orange-300 focus:ring-orange-400 transition duration-150 ease-in-out"
+            />
+            <span class="ml-2 text-gray-700 text-base">男の子</span>
+          </label>
+          <label class="inline-flex items-center cursor-pointer">
+            <input
+              type="radio"
+              v-model="selectedGender"
+              value="女の子"
+              class="form-radio h-5 w-5 text-orange-600 border-orange-300 focus:ring-orange-400 transition duration-150 ease-in-out"
+            />
+            <span class="ml-2 text-gray-700 text-base">女の子</span>
+          </label>
+        </div>
+
+        <!-- クリアボタン -->
+        <div class="mt-4 text-right">
+          <button
+            @click="clearFilters"
+            class="px-6 py-2 text-orange-400 font-bold underline hover:text-orange-500 transition"
+          >
+            絞り込みをクリア
+          </button>
+        </div>
+      </div>
     </div>
 
     <div class="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
@@ -89,53 +137,50 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { fetchDogs } from '@/api/fetchDogs'; // 犬データを取得するAPI関数
-import DogCard from '@/components/DogCard.vue'; // 各犬を表示するコンポーネント
-import { useRouter } from 'vue-router'; // ルーティング用
+import { fetchDogs } from '@/api/fetchDogs';
+import DogCard from '@/components/DogCard.vue';
+import { useRouter } from 'vue-router';
 
-const allDogs = ref([]); // 全ての犬データを保持（フィルタリング前の元データ）
-const selectedBreed = ref(''); // 選択された犬種を保持
-const selectedStatus = ref(''); // 選択されたステータスを保持
+const allDogs = ref([]);
+const selectedBreed = ref('');
+const selectedStatus = ref('');
+const selectedGender = ref('');
 const router = useRouter();
 
-// コンポーネントがマウントされた時に犬データを取得
 onMounted(async () => {
   try {
     const fetchedDogs = await fetchDogs();
-    allDogs.value = fetchedDogs; // 取得したデータをallDogsに保存
+    allDogs.value = fetchedDogs;
   } catch (error) {
     console.error('犬データ取得エラー:', error);
-    // ユーザーフレンドリーなエラーメッセージを表示するなどの処理を追加
   }
 });
 
-// 利用可能な犬種のリストを動的に生成
 const availableBreeds = computed(() => {
-  const breeds = new Set(); // 重複を防ぐためにSetを使う
+  const breeds = new Set();
   allDogs.value.forEach(dog => {
     if (dog.breed) {
       breeds.add(dog.breed);
     }
   });
-  // Setを配列に変換し、アルファベット順にソート
   return Array.from(breeds).sort();
 });
 
-// フィルタリングとソートを組み合わせた計算プロパティ
 const filteredAndSortedDogs = computed(() => {
   let filtered = allDogs.value;
 
-  // 1. 犬種によるフィルタリング
   if (selectedBreed.value) {
     filtered = filtered.filter(dog => dog.breed === selectedBreed.value);
   }
 
-  // 2. ステータスによるフィルタリング
   if (selectedStatus.value) {
     filtered = filtered.filter(dog => dog.status === selectedStatus.value);
   }
 
-  // 3. 譲渡済みの犬を最後にソート
+  if (selectedGender.value) {
+    filtered = filtered.filter(dog => dog.gender === selectedGender.value);
+  }
+
   return filtered.sort((a, b) => {
     if (a.status === '譲渡済' && b.status !== '譲渡済') {
       return 1;
@@ -143,13 +188,18 @@ const filteredAndSortedDogs = computed(() => {
     if (a.status !== '譲渡済' && b.status === '譲渡済') {
       return -1;
     }
-    return 0; // その他の場合は順序を変えない
+    return 0;
   });
 });
 
-// 犬の詳細ページへ遷移
 function goToDetail(id) {
   router.push(`/dogs/${id}`);
+}
+
+function clearFilters() {
+  selectedBreed.value = '';
+  selectedStatus.value = '';
+  selectedGender.value = '';
 }
 </script>
 

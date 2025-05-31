@@ -38,6 +38,7 @@ function formatDogData(dogData) {
 
   return {
     id: dogData.id,
+    createdAt: dogData.createdAt,
     name: dogData.name,
     images: dogData.images,
     breed: dogData.breed,
@@ -53,13 +54,17 @@ function formatDogData(dogData) {
 }
 
 /**
- * 全ての犬のデータを取得する
+ * 全ての犬のデータを作成日の降順取得する
  * @returns {Promise<Array<object>>} - 整形された犬データオブジェクトの配列
  * @throws {Error} - APIリクエストに失敗した場合
  */
 export async function fetchDogs() {
   try {
-    const response = await microcmsClient.get('/dogs');
+    const params = {
+      orders: '-createdAt',
+    };
+    const response = await microcmsClient.get('/dogs', { params });
+
     // `contents`が存在しない場合も考慮
     const dogs = response.data.contents ? response.data.contents.map(formatDogData) : [];
     return dogs;
@@ -69,6 +74,41 @@ export async function fetchDogs() {
     throw new Error('犬データ一覧の取得に失敗しました。');
   }
 }
+
+/**
+ * 譲渡済以外の犬のデータを作成日の降順取得する
+ * @returns {Promise<Array<object>>} - 整形された犬データオブジェクトの配列
+ * @throws {Error} - APIリクエストに失敗した場合
+ */
+export async function fetchDogsWithoutAdopted(limit) {
+  try {
+    // 譲渡済のわんちゃんを除外するために、多めに取得してからフィルタリング
+    const fetchLimit = limit + 10;
+
+    const response = await microcmsClient.get('/dogs', {
+      params: {
+        orders: '-createdAt',
+        limit: fetchLimit,
+      },
+    });
+
+    const allDogs = response.data.contents ? response.data.contents.map(formatDogData) : [];
+
+    const availableDogs = allDogs.filter((dog) => {
+      return !(dog.status || []).includes('譲渡済');
+    });
+
+    // 指定数に満たない場合でもスライス（最大 limit 件）
+    const selectedDogs = availableDogs.slice(0, limit);
+
+    // 条件に合う犬がいない場合は空配列を返す
+    return selectedDogs;
+  } catch (error) {
+    console.error('犬データ一覧の取得に失敗しました:', error);
+    return [];
+  }
+}
+
 
 /**
  * 特定のIDを持つ犬のデータを取得する

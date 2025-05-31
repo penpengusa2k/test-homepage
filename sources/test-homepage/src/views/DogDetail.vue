@@ -1,5 +1,6 @@
 <template>
   <div class="max-w-6xl mx-auto px-4 py-10 bg-peach-50 rounded-lg" v-if="dog">
+    <!-- 犬名・詳細見出し -->
     <div class="text-center mb-8">
       <div class="inline-flex flex-col sm:flex-row sm:items-center gap-2 justify-center">
         <h1 class="text-4xl font-extrabold text-orange-700">{{ dog.name }}</h1>
@@ -27,73 +28,71 @@
             v-if="dog.images && dog.images.length > 0"
             :src="dog.images[0].url"
             :alt="`${dog.name}の画像`"
-            class="w-full h-full object-contain"
+            class="w-full h-full object-cover"
           />
           <div v-else class="text-gray-500">画像がありません</div>
         </div>
 
-        <div class="flex mt-4 gap-2 overflow-x-auto">
+        <!-- サムネイル -->
+        <div v-if="dog.images.length > 1" class="flex mt-4 gap-2 overflow-x-auto">
+          <template
+            v-for="(image, index) in dog.images.slice(1, displayCount + 1)"
+            :key="index + 1"
+          >
+            <div
+              class="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-lg overflow-hidden cursor-pointer border border-peach-100 hover:border-orange-400 transition-colors duration-200 bg-peach-100 flex items-center justify-center"
+              @click="openPhotoSwipe(index + 1)"
+            >
+              <img
+                :src="image.url"
+                :alt="`${dog.name}の画像 ${index + 2}`"
+                class="w-full h-full object-cover"
+              />
+            </div>
+          </template>
+
           <div
-            v-for="(image, index) in dog.images"
-            :key="index"
-            class="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-lg overflow-hidden cursor-pointer border border-peach-100 hover:border-orange-400 transition-colors duration-200 bg-peach-100 flex items-center justify-center"
-            @click="openPhotoSwipe(index)"
+            v-if="dog.images.length > displayCount + 1"
+            class="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-lg overflow-hidden cursor-pointer border border-peach-100 bg-peach-100 flex items-center justify-center relative group"
+            @click="openPhotoSwipe(displayCount + 1)"
           >
             <img
-              :src="image.url"
-              :alt="`${dog.name}の画像 ${index + 1}`"
-              class="w-full h-full object-cover"
+              :src="dog.images[displayCount + 1].url"
+              class="w-full h-full object-cover opacity-50 group-hover:opacity-40"
+              :alt="`${dog.name}の画像 ${displayCount + 2}`"
             />
-          </div>
-        </div>
-      </div>
-
-      <!-- 詳細欄 -->
-      <div class="md:w-1/2 w-full mt-6 md:mt-0 bg-white p-6 rounded-2xl shadow-lg border border-peach-200">
-        <div class="space-y-4">
-          <div
-            v-for="(item, index) in details"
-            :key="index"
-            class="grid grid-cols-1 grid-cols-2 gap-y-2 gap-x-4 py-3 border-b border-orange-100 last:border-b-0"
-          >
-            <div v-if="item.label1">
-              <span class="font-bold text-orange-700 text-lg">{{ item.label1 }}</span><br />
-              <span class="text-gray-700 text-base">{{ item.value1 }}</span>
-            </div>
-            <div v-if="item.label2">
-              <span class="font-bold text-orange-700 text-lg">{{ item.label2 }}</span><br />
-              <span class="text-gray-700 text-base">{{ item.value2 }}</span>
+            <div
+              class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-xl font-bold select-none"
+            >
+              +{{ dog.images.length - (displayCount + 1) }}枚
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- 問い合わせボタン / 譲渡済メッセージ -->
-    <div class="w-full text-center mt-12">
-      <template v-if="dog.status === '譲渡済'">
+      <!-- 詳細部分 -->
+      <div class="md:w-1/2 w-full">
         <div
-          class="inline-flex flex-col items-center justify-center bg-gray-200 text-gray-600 py-6 px-8 rounded-full text-2xl font-bold w-full max-w-md mx-auto cursor-not-allowed shadow-md"
+          v-for="(detail, index) in details"
+          :key="index"
+          class="flex justify-between py-3 border-b border-peach-200"
         >
-          <span class="material-icons text-4xl mb-2">info</span>
-          このわんちゃんは新しい家族と幸せに暮らしています
+          <div class="w-1/2 pr-4">
+            <p class="font-semibold text-peach-900">{{ detail.label1 }}</p>
+            <p class="text-peach-700">{{ detail.value1 }}</p>
+          </div>
+          <div v-if="detail.label2" class="w-1/2 pl-4 border-l border-peach-200">
+            <p class="font-semibold text-peach-900">{{ detail.label2 }}</p>
+            <p class="text-peach-700">{{ detail.value2 }}</p>
+          </div>
         </div>
-      </template>
-      <template v-else>
-        <router-link
-          to="/contact"
-          class="inline-flex flex-col sm:flex-row items-center justify-center bg-gradient-to-r from-orange-400 to-peach-500 text-white py-5 px-8 rounded-full hover:bg-orange-500 transition duration-300 ease-in-out text-2xl font-bold w-full max-w-md mx-auto shadow-lg transform hover:scale-105"
-        >
-          <span class="material-icons text-3xl mr-0 sm:mr-3 mb-2 sm:mb-0">mail</span>
-          このわんちゃんについて<br/>お問い合わせする
-        </router-link>
-      </template>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick, computed } from 'vue';
+import { ref, computed, onMounted, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
 import { fetchDogById } from '@/api/fetchDogs';
 import PhotoSwipeLightbox from 'photoswipe/lightbox';
@@ -103,13 +102,16 @@ const route = useRoute();
 const dog = ref(null);
 let lightbox = null;
 
+// 表示するサムネイル枚数（メイン画像は含まない）
+const displayCount = 3;
+
 const openPhotoSwipe = async (index = 0) => {
   if (!dog.value || !dog.value.images || dog.value.images.length === 0) {
     console.warn('画像がありません。PhotoSwipeを開けません。');
     return;
   }
 
-  const items = dog.value.images.map(img => ({
+  const items = dog.value.images.map((img) => ({
     src: img.url,
     width: img.width || 800,
     height: img.height || 600,
@@ -144,8 +146,10 @@ onMounted(async () => {
   }
 });
 
+// 詳細情報を2列にまとめる computed
 const details = computed(() => {
   if (!dog.value) return [];
+
   const rawDetails = [
     { label: '犬種', value: dog.value.breed },
     { label: '性別', value: dog.value.gender },
@@ -169,7 +173,3 @@ const details = computed(() => {
   return grouped;
 });
 </script>
-
-<style scoped>
-/* 必要に応じてカスタムスタイルを追加 */
-</style>

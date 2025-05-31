@@ -5,12 +5,21 @@
     :class="{ 'opacity-60 pointer-events-none': dog.status === '譲渡済' }"
   >
     <div class="relative w-full h-52 overflow-hidden">
+      <!-- ✅ NEWバッジ -->
+      <span
+        v-if="isNew"
+        class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-md z-10"
+      >
+        NEW
+      </span>
+
       <img
         :src="dog.images?.[0]?.url"
         alt="犬の写真"
         class="w-full h-full object-include bg-peach-50"
       />
 
+      <!-- ✅ 譲渡済みオーバーレイ -->
       <div
         v-if="dog.status === '譲渡済'"
         class="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-60 text-white text-2xl font-extrabold tracking-wide"
@@ -41,7 +50,7 @@
 
       <div class="text-sm text-gray-600 mb-3">
         <p class="font-medium">{{ dog.breed }}</p>
-        </div>
+      </div>
 
       <div class="mt-auto flex justify-center">
         <span
@@ -60,15 +69,26 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
+
 const props = defineProps({
   dog: Object
+});
+
+// ✅ 作成日が30日以内かつ譲渡済以外なら「NEW」バッジ表示
+const isNew = computed(() => {
+  if (!props.dog) return false;
+  if (props.dog.status === '譲渡済') return false;
+  const createdAt = new Date(props.dog.createdAt);
+  const now = new Date();
+  const diffInMs = now - createdAt;
+  const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+  return diffInDays <= 30;
 });
 </script>
 
 <style scoped>
-/* 必要であれば追加のスタイルをここに記述 */
-/* たとえば、status-badgeの細かな調整など */
 .status-badge {
-  white-space: nowrap; /* テキストの折り返しを防ぐ */
+  white-space: nowrap;
 }
 </style>
