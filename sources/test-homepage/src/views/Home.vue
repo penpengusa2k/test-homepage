@@ -18,7 +18,7 @@
       v-if="limitedDogs.length > 0"
       class="mb-12"
     >
-      <h2 class="text-2xl sm:text-3xl font-bold text-orange-700 mb-6 text-center">
+      <h2 class="text-2xl sm:text-3xl font-bold text-orange-700 mt-6 mb-6 text-center">
         新着のわんちゃんたち
       </h2>
       <div class="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
