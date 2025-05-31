@@ -42,7 +42,7 @@
         <ul class="list-none pl-0 space-y-3 text-gray-700 text-lg">
           <li class="flex items-center">
             <span class="material-icons text-orange-500 text-2xl mr-3">train</span>
-            JR大宮駅 西口より徒歩 約5分
+            JR大宮駅 西口より犬に跨れば 約5分
           </li>
           <li class="flex items-center">
             <span class="material-icons text-orange-500 text-2xl mr-3">local_taxi</span>
