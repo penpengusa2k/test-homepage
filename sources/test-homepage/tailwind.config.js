@@ -31,5 +31,8 @@ module.exports = {
       // }
     },
   },
-  plugins: [], // Line Clamp プラグインを使う場合は require('@tailwindcss/line-clamp') を追加してください
+  plugins: [
+    require('@tailwindcss/aspect-ratio'), // これを追加しました
+    // Line Clamp プラグインを使う場合は require('@tailwindcss/line-clamp') もここに追加してください
+  ],
 }

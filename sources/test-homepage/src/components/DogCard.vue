@@ -4,7 +4,7 @@
     @click="$emit('click')"
     :class="{ 'opacity-60 pointer-events-none': dog.status === '譲渡済' }"
   >
-    <div class="relative w-full h-52 overflow-hidden">
+    <div class="relative w-full aspect-[4/3] overflow-hidden">
       <span
         v-if="isNew"
         class="absolute top-2 right-2 bg-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-md z-10"
@@ -15,7 +15,7 @@
       <img
         :src="dog.images?.[0]?.url"
         alt="犬の写真"
-        class="w-full h-full object-include bg-orange-50"
+        class="absolute inset-0 w-full h-full object-cover bg-orange-50"
       />
 
       <div
@@ -73,7 +73,6 @@ const props = defineProps({
   dog: Object
 });
 
-// ✅ 作成日が30日以内かつ譲渡済以外なら「NEW」バッジ表示
 const isNew = computed(() => {
   if (!props.dog) return false;
   if (props.dog.status === '譲渡済') return false;
